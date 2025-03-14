@@ -1,8 +1,10 @@
 function Navigation() {
     return (
-        <nav className="bg-gray-100">
+        <nav className="">
             <div className="w-full max-w-[1400px] mx-auto sm:px-6 lg:px-8 flex justify-end gap-10 p-5">
-                <div className="mx-auto ml-0">Logo</div>
+                <div className="mx-auto ml-0">
+                    <a href="/">Logo</a>
+                </div>
                 <div>
                     <a href="#">Contests</a>
                 </div>

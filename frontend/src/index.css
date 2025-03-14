@@ -1,4 +1,14 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    a {
+        @apply block;
+    }
+}
+
 
 /* :root {
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
