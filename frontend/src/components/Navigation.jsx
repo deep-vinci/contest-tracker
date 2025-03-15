@@ -2,7 +2,7 @@ function Navigation() {
     return (
         <nav className="">
             <div className="w-full max-w-[1400px] mx-auto sm:px-6 lg:px-8 flex justify-end gap-10 p-5">
-                <div className="mx-auto ml-0">
+                <div className="mx-auto ml-0 def">
                     <a href="/">Logo</a>
                 </div>
                 <div>
@@ -15,7 +15,7 @@ function Navigation() {
                     <a href="/about">About</a>
                 </div>
                 <div>
-                    <a href="#">Login</a>
+                    <a href="/login">Login</a>
                 </div>
             </div>
         </nav>
