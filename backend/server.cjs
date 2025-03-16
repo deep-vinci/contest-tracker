@@ -1,9 +1,13 @@
 const express = require("express");
 const path = require("path");
+// const jwtDecode = require("jwt-decode");
 
 const app = express();
 
-app.get("/api", (req, res) => {
+app.use(express.json());
+
+app.get("/g_auth", (req, res) => {
+    console.log(req.body);
     res.json({ message: "Hello from API!" });
 });
 
@@ -16,5 +20,5 @@ app.get("*", (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
