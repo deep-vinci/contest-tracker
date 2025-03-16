@@ -1,21 +1,10 @@
 import { GoogleLogin } from "@react-oauth/google";
-// import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import Navigation from "./Navigation";
 
-function App() {
+function Login({ updateUser }) {
     const veirfyJWT = async (data) => {
-        // try {
-        //     const response = await axios.post(
-        //         "/api/decode-jwt",
-        //         { credentials: data } // Request body
-        //     );
-        //     console.log("Response:", response.data);
-        // } catch (error) {
-        //     console.error("Error:", error.response?.data || error.message);
-        // }
-
         const decodedData = jwtDecode(data.credential);
+        updateUser(decodedData);
         return decodedData;
     };
 
@@ -29,6 +18,7 @@ function App() {
                     theme="outline"
                     type="standard"
                     size="medium"
+                    useOneTap="true"
                     onSuccess={veirfyJWT}
                     onError={errorMessage}
                 />
@@ -36,4 +26,4 @@ function App() {
         </>
     );
 }
-export default App;
+export default Login;
