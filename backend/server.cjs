@@ -23,7 +23,21 @@ app.post("/api/userinfo", async (req, res) => {
         .eq("email", req.body.data.email);
 
     if (error) throw error;
-    console.log(data.length > 0 ? data[0] : null);
+
+    // if user is found, send a cookie save cookie in db otherwise create user and then send cookie and then save cookie in db
+    if (data.length > 0) {
+        const userJWT = req.body.jwt.credential;
+
+        res.cookie("session", userJWT, {
+            httpOnly: true,
+            sameSite: "Strict",
+            maxAge: 60 * 1000,
+        });
+        return res.json({ message: "Login successful" });
+    } else {
+        return res.status(404).json({ error: "User not found" });
+    }
+    // console.log(data.length > 0 ? : null);
 
     res.json({ message: "Hello from API!" });
 });
