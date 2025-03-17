@@ -1,6 +1,7 @@
 import Login from "./Login.jsx";
 
-function Navigation() {
+function Navigation({ user, loggedIn, updateUser }) {
+    console.log(user);
     return (
         <nav className="">
             <div className="z-40 w-full max-w-[1400px] mx-auto sm:px-6 lg:px-8 flex justify-end gap-10 p-5 items-center">
@@ -16,11 +17,15 @@ function Navigation() {
                 <div>
                     <a href="/about">About</a>
                 </div>
-                <div className="flex items-center justify-center mb-2">
-                    <a href="/login">
-                        <Login />
-                    </a>
-                </div>
+
+                {user === null ? (
+                    <Login updateUser={updateUser} />
+                ) : (
+                    <img
+                        className="w-10 h-10 rounded-full"
+                        src={user.picture}
+                    />
+                )}
             </div>
         </nav>
     );

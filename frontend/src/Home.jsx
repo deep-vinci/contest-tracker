@@ -4,7 +4,7 @@ import axios from "axios";
 
 function Home() {
     const [loggedIn, setLoggedIn] = useState("true");
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         const autoLogin = async () => {
