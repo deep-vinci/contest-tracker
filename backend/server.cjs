@@ -26,7 +26,7 @@ async function verifyUser(req, res, next) {
         const { session } = req.cookies;
 
         if (!session) {
-            console.log(req.cookies);
+            return res.status(401).json({ message: "Invalid session" });
         }
 
         // Verify the session token
@@ -40,13 +40,9 @@ async function verifyUser(req, res, next) {
             ...data,
         };
 
-        console.log(req.user);
         next();
     } catch (error) {
         console.error("Error during session verification:", error.message);
-        // return res
-        //     .status(500)
-        //     .sendFile(path.join(__dirname, "..", "public", "error.html"));
     }
 }
 
@@ -54,12 +50,13 @@ async function verifyUser(req, res, next) {
 app.get("/api/auth/session", verifyUser, async (req, res) => {
     // ! fetch the user with email from req.user
 
-    const { data, error } = await supabase
+    const { data: user, error } = await supabase
         .from("users")
         .select("username, email, picture")
-        .eq("email", req.user.email);
+        .eq("email", req.user[0].email);
 
-    res.json({ data });
+    // console.log(req.user[0].email, { data });
+    res.json({ user });
 });
 
 // * sign-up sign-in route.
