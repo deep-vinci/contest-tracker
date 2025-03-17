@@ -1,14 +1,33 @@
-// import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import Navigation from "./components/Navigation";
-function App() {
-    // const [count, setCount] = useState(0);
+import axios from "axios";
+
+function Home() {
+    const [loggedIn, setLoggedIn] = useState("true");
+    const [user, setUser] = useState({});
+
+    useEffect(() => {
+        const autoLogin = async () => {
+            try {
+                const response = await axios.get("/api/auth/session", {
+                    withCredentials: true,
+                });
+                console.log("test", response.data.user[0]);
+                setUser(response.data.user[0]);
+                setLoggedIn("true");
+            } catch (error) {
+                console.error("err", error);
+            }
+        };
+
+        autoLogin();
+    }, []);
 
     return (
         <>
-            <Navigation />
+            <Navigation user={user} updateUser={setUser} />
         </>
     );
 }
 
-export default App;
+export default Home;
