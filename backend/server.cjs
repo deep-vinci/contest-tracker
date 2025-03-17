@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const { createClient } = require("@supabase/supabase-js");
+const { verify } = require("crypto");
 
 require("dotenv").config();
 
@@ -14,32 +16,127 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
-app.post("/api/userinfo", async (req, res) => {
-    // check if user exists
+const maxAge = 60 * 60 * 1000;
+const expireAt = new Date(new Date().getTime() + maxAge);
+
+async function verifyUser(req, res, next) {
+    try {
+        const { session } = req.cookies;
+
+        if (!session) {
+            console.log(req.cookies);
+        }
+
+        // Verify the session token
+        const { data, error } = await supabase
+            .from("session_table")
+            .select("*")
+            .eq("session", session);
+
+        if (error) throw error;
+        req.user = {
+            ...data,
+        };
+
+        console.log(req.user);
+        next();
+    } catch (error) {
+        console.error("Error during session verification:", error.message);
+        // return res
+        //     .status(500)
+        //     .sendFile(path.join(__dirname, "..", "public", "error.html"));
+    }
+}
+
+// * manage auto login by verifying if session is valid
+app.get("/api/auth/session", verifyUser, async (req, res) => {
+    // ! fetch the user with email from req.user
+
     const { data, error } = await supabase
         .from("users")
-        .select("*")
-        .eq("email", req.body.data.email);
+        .select("username, email, picture")
+        .eq("email", req.user.email);
 
-    if (error) throw error;
+    res.json({ data });
+});
 
-    // if user is found, send a cookie save cookie in db otherwise create user and then send cookie and then save cookie in db
-    if (data.length > 0) {
-        const userJWT = req.body.jwt.credential;
+// * sign-up sign-in route.
+// this route basically is allinone, handles signup if new user
+// enters the email, pass. handles login if already existing user
+// enters the email, pass. It also sends session as cookie to db
+// for user verification.
+app.post("/api/auth/signup-or-login", async (req, res) => {
+    try {
+        const { email, name, sub, picture } = req.body.data;
+        const userJWT = req.body.jwt?.credential;
+        if (!email || !userJWT) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
 
-        res.cookie("session", userJWT, {
+        // Set session cookie options
+        const cookieOptions = {
             httpOnly: true,
             sameSite: "Strict",
-            maxAge: 60 * 1000,
-        });
-        return res.json({ message: "Login successful" });
-    } else {
-        return res.status(404).json({ error: "User not found" });
-    }
-    // console.log(data.length > 0 ? : null);
+            maxAge: maxAge,
+        };
 
-    res.json({ message: "Hello from API!" });
+        // Check if user exists
+        const { data: users, error: userFetchError } = await supabase
+            .from("users")
+            .select("*")
+            .eq("email", email);
+
+        if (userFetchError) {
+            console.error("Error fetching user:", userFetchError);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        // If user exists, store session
+        if (users.length > 0) {
+            res.cookie("session", userJWT, cookieOptions);
+
+            const { error: sessionError } = await supabase
+                .from("session_table")
+                .insert([{ email, session: userJWT, expire_at: expireAt }]);
+
+            if (sessionError) {
+                console.error("Error saving session:", sessionError);
+                return res
+                    .status(500)
+                    .json({ error: "Failed to save session" });
+            }
+
+            return res.json({ message: "Login successful" });
+        }
+
+        // If user doesn't exist, create user
+        const { error: userInsertError } = await supabase
+            .from("users")
+            .insert([{ email, username: name, google_id: sub, picture }]);
+
+        if (userInsertError) {
+            console.error("Error creating user:", userInsertError);
+            return res.status(500).json({ error: "Failed to create user" });
+        }
+
+        // Store session
+        const { error: sessionInsertError } = await supabase
+            .from("session_table")
+            .insert([{ email, session: userJWT, expire_at: expireAt }]);
+
+        if (sessionInsertError) {
+            console.error("Error saving session:", sessionInsertError);
+            return res.status(500).json({ error: "Failed to save session" });
+        }
+
+        res.cookie("session", userJWT, cookieOptions);
+        return res.json({ message: "User created and logged in" });
+    } catch (err) {
+        console.error("Unexpected error:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
 });
 
 app.get("/g_auth", (req, res) => {
