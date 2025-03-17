@@ -1,6 +1,6 @@
 import Navigation from "./components/Navigation";
 
-function App() {
+function About() {
     return (
         <>
             <Navigation />
@@ -8,4 +8,4 @@ function App() {
     );
 }
 
-export default App;
+export default About;
