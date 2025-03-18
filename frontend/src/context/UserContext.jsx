@@ -11,6 +11,7 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const autoLogin = async () => {
@@ -20,9 +21,10 @@ export const UserProvider = ({ children }) => {
                 });
                 console.log("test", response.data.user[0]);
                 setUser(response.data.user[0]);
-                setLoggedIn("true");
+                setLoading(false);
             } catch (error) {
                 console.error("err", error);
+                setLoading(false);
             }
         };
 
@@ -30,7 +32,7 @@ export const UserProvider = ({ children }) => {
     }, []);
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, loading, setLoading }}>
             {children}
         </UserContext.Provider>
     );
