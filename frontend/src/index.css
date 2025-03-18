@@ -1,13 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap");
 @import "tailwindcss";
-
-@tailwind utilities;
 
 @layer base {
     a {
         @apply font-bold;
     }
 
-    .def {
-        @apply bg-green-200 px-3 py-0.5 rounded-md text-green-700;
+    .logo {
+        @apply bg-slate-200 px-3 py-0.5 rounded-md text-slate-700;
     }
+}
+
+@theme {
+    --font-bricolage: "Bricolage Grotesque", sans-serif;
 }
