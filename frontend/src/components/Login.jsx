@@ -43,6 +43,7 @@ function Login() {
             <GoogleLogin
                 theme="filled_black"
                 type="standard"
+                shape="pill"
                 size="large"
                 useOneTap="true"
                 onSuccess={updateUserState}

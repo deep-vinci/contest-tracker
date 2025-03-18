@@ -4,7 +4,7 @@ import leetcodePng from "../assets/image2.png";
 function Hero() {
     return (
         <div className="w-full h-150 flex flex-col gap-10 sm:flex-row items-center font-bricolage">
-            <div className="px-10">
+            <div className="px-12">
                 <button className="border-1 flex rounded-full items-center px-5 mb-3 shadow-xl shadow-slate-200 hover:bg-black hover:text-white transition">
                     connect with me
                     <svg

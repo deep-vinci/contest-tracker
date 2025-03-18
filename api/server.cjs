@@ -50,10 +50,13 @@ async function verifyUser(req, res, next) {
 app.get("/api/auth/session", verifyUser, async (req, res) => {
     // ! fetch the user with email from req.user
 
+    // console.log(req.user[0]);
     const { data: user, error } = await supabase
         .from("users")
         .select("username, email, picture")
         .eq("email", req.user[0].email);
+
+    if (error) throw error;
 
     // console.log(req.user[0].email, { data });
     res.json({ user });
