@@ -1,8 +1,10 @@
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { useUser } from "../context/UserContext";
 
-function Login({ updateUser }) {
+function Login() {
+    const { user, setUser } = useUser();
     const postUserData = async (data, jwt) => {
         try {
             const response = await axios.post(
@@ -29,7 +31,7 @@ function Login({ updateUser }) {
     const updateUserState = (data) => {
         const jwt = data;
         const decodedData = jwtDecode(data.credential);
-        updateUser(decodedData);
+        setUser(decodedData);
         postUserData(decodedData, jwt);
     };
 
@@ -39,9 +41,9 @@ function Login({ updateUser }) {
     return (
         <>
             <GoogleLogin
-                theme="outline"
+                theme="filled_black"
                 type="standard"
-                size="medium"
+                size="large"
                 useOneTap="true"
                 onSuccess={updateUserState}
                 onError={errorMessage}
