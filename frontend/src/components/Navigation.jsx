@@ -10,7 +10,7 @@ function Navigation() {
             <div className="z-40 w-full max-w-[1400px] mx-auto sm:px-6 lg:px-8 rounded-full p-5 ">
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-end sm:gap-10 items-center">
                     <div className="mx-auto ml-0 logo">
-                        <a href="/">Hack hunt</a>
+                        <a href="/">hackHunt</a>
                     </div>
                     <div>
                         <a href="#">Contests</a>
