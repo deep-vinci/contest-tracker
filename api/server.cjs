@@ -3,6 +3,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const { createClient } = require("@supabase/supabase-js");
 const { verify } = require("crypto");
+const port = process.env.PORT || 4000;
 
 require("dotenv").config();
 
@@ -153,5 +154,4 @@ app.get("*", (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, () => console.log(`Server running on port ${PORT}`));
