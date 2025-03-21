@@ -1,6 +1,6 @@
 function Skeletal() {
     return (
-        <div className=" bg-gray-200 h-30 rounded-xl p-5">
+        <div className=" bg-gray-200 animate-pulse h-30 rounded-xl p-5">
             <div className="flex flex-row">
                 <div className=" font-semibold text-xl"></div>
                 <div className="mr-0 ml-auto bg-green-200 text-green-900 p-1 rounded text-sm"></div>
@@ -28,7 +28,9 @@ function Skeletal() {
 function SkeletonContest() {
     return (
         <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            <Skeletal />
+            {[...Array(12)].map((_, i) => (
+                <Skeletal key={i} />
+            ))}
         </div>
     );
 }
