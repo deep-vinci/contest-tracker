@@ -6,7 +6,7 @@ function Navigation() {
     const { user, setUser, loading } = useUser();
 
     return (
-        <nav className="sticky top-0">
+        <nav className="sticky top-0 bg-white">
             <div className="z-40 w-full max-w-[1400px] mx-auto sm:px-6 lg:px-8 rounded-full p-5 ">
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-end sm:gap-10 items-center">
                     <div className="mx-auto ml-0 logo">
