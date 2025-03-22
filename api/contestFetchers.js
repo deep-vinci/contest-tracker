@@ -56,6 +56,32 @@ export async function fetchLeetcodeContests() {
     }
 }
 
+export async function fetchCodechefContests() {
+    try {
+        const response = await axios.get(
+            "https://www.codechef.com/api/list/contests/all"
+        );
+        if (!response.data.future_contests)
+            throw new Error("Failed to fetch CodeChef contests");
+        return response.data.future_contests.map((contest) => ({
+            platform: "CodeChef",
+            name: contest.contest_name,
+            startTimeUnix: Math.floor(
+                new Date(contest.contest_start_date).getTime() / 1000
+            ),
+            startTime: new Date(contest.contest_start_date).toISOString(),
+            duration: calculateDuration(
+                contest.contest_start_date,
+                contest.contest_end_date
+            ),
+            url: `https://www.codechef.com/${contest.contest_code}`,
+        }));
+    } catch (error) {
+        console.error("Error fetching CodeChef contests:", error.message);
+        return [];
+    }
+}
+
 export function calculateDuration(startDate, endDate) {
     const durationSeconds = Math.floor(
         (new Date(endDate) - new Date(startDate)) / 1000
