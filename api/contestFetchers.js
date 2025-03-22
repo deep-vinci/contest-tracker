@@ -28,6 +28,34 @@ export async function fetchCodeforcesContests() {
     }
 }
 
+export async function fetchLeetcodeContests() {
+    try {
+        const graphqlQuery = {
+            query: `query { allContests { title startTime duration titleSlug } }`,
+        };
+        const response = await axios.post(
+            "https://leetcode.com/graphql",
+            graphqlQuery,
+            { headers: { "Content-Type": "application/json" } }
+        );
+        return response.data.data.allContests
+            .filter((contest) => contest.startTime * 1000 > Date.now())
+            .map((contest) => ({
+                platform: "LeetCode",
+                name: contest.title,
+                startTimeUnix: contest.startTime,
+                startTime: new Date(contest.startTime * 1000).toISOString(),
+                duration: `${Math.floor(contest.duration / 3600)} hours ${
+                    (contest.duration % 3600) / 60
+                } minutes`,
+                url: `https://leetcode.com/contest/${contest.titleSlug}`,
+            }));
+    } catch (error) {
+        console.error("Error fetching LeetCode contests:", error.message);
+        return [];
+    }
+}
+
 export function calculateDuration(startDate, endDate) {
     const durationSeconds = Math.floor(
         (new Date(endDate) - new Date(startDate)) / 1000
