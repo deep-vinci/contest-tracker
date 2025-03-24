@@ -3,7 +3,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const { createClient } = require("@supabase/supabase-js");
 const { verify } = require("crypto");
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8000;
 
 require("dotenv").config();
 
