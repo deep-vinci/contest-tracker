@@ -4,6 +4,10 @@ import Options from "./Options";
 import Contest from "./Contest";
 import SkeletonContest from "./SkeletonContest";
 import like from "../assets/like.svg";
+
+import Upcoming from "./Upcoming";
+import Saved from "./Saved";
+
 function timeUntill(time) {
     // let date = new Date().now();
     console.log();
@@ -23,84 +27,29 @@ function timeUntill(time) {
 }
 
 function Dashboard() {
-    const [contest, setContest] = useState(null);
-    let contestList;
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get("/contests", {
-                    withCredentials: true,
-                });
-                console.log("demo", response.data.data);
-                setContest(response.data.data);
-
-                // contestList = response.data.data.map((e) => {
-                //     <div>{e}</div>;
-                // });
-            } catch (error) {
-                console.error("err", error);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    // contest.map((e) => {
-    //     console.log(e);
-    //     return e;
-    // });
-    // {"platform":"CodeChef","name":"Starters 178 (Rated till 6 star)","code":"START178","startTimeUnix":1742394600,"startTime":"2025-03-19T14:30:00.000Z","endTime":"2025-03-19T16:30:00.000Z","duration":"2 hours 0 minutes","url":"https://www.codechef.com/START178"}
+    const [contestType, setContestType] = useState("upcoming");
 
     return (
-        // <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-
         <>
             <div className="w-full h-full mt-5">
-                {contest == null ? (
-                    <SkeletonContest />
-                ) : (
-                    <div className="w-full">
-                        {/* <div className="flex w-full justify-center gap-5">
-                            <button className="bg-gray-50 border-slate-300 px-4 py-1 rounded">
-                                upcoming
-                            </button>
-                            <button className="bg-gray-50 border-slate-300 px-4 py-1 rounded">
-                                saved
-                            </button>
-                        </div> */}
-
-                        <div
-                            class="inline-flex rounded-md shadow-xs"
-                            role="group"
-                        >
-                            <button
-                                type="button"
-                                class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
-                            >
-                                Upcoming
-                            </button>
-                            <button
-                                type="button"
-                                class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
-                            >
-                                Saved
-                            </button>
-                        </div>
-
-                        <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                            {contest.map((e, index) => (
-                                <Contest
-                                    name={e.name}
-                                    platform={e.platform}
-                                    url={e.url}
-                                    starts={timeUntill(e.startTimeUnix)}
-                                    duration={e.duration}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                )}
+                <div class="inline-flex rounded-md shadow-xs" role="group">
+                    <button
+                        onClick={() => setContestType("upcoming")}
+                        type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                    >
+                        Upcoming
+                    </button>
+                    <button
+                        onClick={() => setContestType("saved")}
+                        type="button"
+                        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+                    >
+                        Saved{" "}
+                    </button>
+                </div>
             </div>
+            <div>{contestType == "upcoming" ? <Upcoming /> : <Saved />}</div>
         </>
     );
 }
@@ -125,3 +74,48 @@ export default Dashboard;
 </td>
 </tr> */
 }
+
+{
+    /* <div className="w-full h-full mt-5">
+<div class="inline-flex rounded-md shadow-xs" role="group">
+    <button
+        type="button"
+        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+    >
+        Upcoming
+    </button>
+    <button
+        type="button"
+        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
+    >
+        Saved
+    </button>
+</div> */
+}
+// {contest == null ? (
+//     <SkeletonContest />
+// ) : (
+//     <div className="w-full">
+//         {/* <div className="flex w-full justify-center gap-5">
+//             <button className="bg-gray-50 border-slate-300 px-4 py-1 rounded">
+//                 upcoming
+//             </button>
+//             <button className="bg-gray-50 border-slate-300 px-4 py-1 rounded">
+//                 saved
+//             </button>
+//         </div> */}
+
+//         <div className="w-full mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+//             {contest.map((e, index) => (
+//                 <Contest
+//                     name={e.name}
+//                     platform={e.platform}
+//                     url={e.url}
+//                     starts={timeUntill(e.startTimeUnix)}
+//                     duration={e.duration}
+//                 />
+//             ))}
+//         </div>
+//     </div>
+// )}
+// </div>
